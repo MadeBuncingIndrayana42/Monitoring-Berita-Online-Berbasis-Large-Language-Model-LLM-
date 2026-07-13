@@ -30,3 +30,8 @@ desktop.ini
 *.bak
 *.swp
 *~
+
+# ===========================================
+# N8N Workflow (berisi API Key sensitif)
+# ===========================================
+n8n_workflow/
