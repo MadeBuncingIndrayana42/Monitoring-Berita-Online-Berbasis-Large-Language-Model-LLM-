@@ -1,0 +1,32 @@
+﻿# ===========================================
+# SECURITY: File konfigurasi sensitif
+# File-file ini TIDAK boleh diunggah ke GitHub
+# ===========================================
+
+# Konfigurasi sensitif (Client ID & Sheets URL)
+js/config.js
+
+# ===========================================
+# XAMPP / Server Logs
+# ===========================================
+*.log
+logs/
+
+# ===========================================
+# OS & Editor Files
+# ===========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.suo
+*.user
+
+# ===========================================
+# Temporary Files
+# ===========================================
+*.tmp
+*.bak
+*.swp
+*~

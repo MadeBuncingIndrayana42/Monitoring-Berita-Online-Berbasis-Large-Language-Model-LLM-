@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Laporan PR - Sistem Analisis Sentimen PR PT Pupuk Sriwidjaja Palembang">
+    <title>Laporan - PR Media Monitoring</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <!-- Top Bar -->
+    <header class="topbar" id="topbar"></header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Report Builder -->
+        <div class="report-builder">
+            <h2 class="report-builder-title">Buat Laporan Baru</h2>
+            <div class="report-builder-controls">
+                <div class="report-field">
+                    <label>Rentang Waktu</label>
+                    <select class="search-input" id="filter-time">
+                        <option value="Semua">Semua Waktu</option>
+                        <option value="Minggu">7 Hari Terakhir</option>
+                        <option value="Bulan">30 Hari Terakhir</option>
+                        <option value="Tahun">Tahun Ini</option>
+                    </select>
+                </div>
+                <div class="report-field">
+                    <label>Jenis Laporan</label>
+                    <select class="search-input" id="report-type">
+                        <option value="Ringkasan Eksekutif">Ringkasan Eksekutif</option>
+                        <option value="Laporan Detail" selected>Laporan Detail</option>
+                        <option value="Analisis Tren">Analisis Tren</option>
+                    </select>
+                </div>
+                <button class="btn btn-outline" id="btn-preview">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Terapkan
+                </button>
+                <button class="btn btn-green" id="btn-export-pdf">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Export PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Report Preview -->
+        <div class="report-preview" id="report-preview">
+            <h1 class="report-preview-title" id="report-main-title">Laporan Detail PR - PT Pupuk Sriwidjaja</h1>
+            <p class="report-preview-period">PERIODE: 1 - 7 MEI 2026</p>
+
+            <div id="section-summary">
+                <h3 class="report-section-title">RINGKASAN EKSEKUTIF</h3>
+                <p class="report-text" style="color: var(--color-text-light);">
+                    Memuat ringkasan eksekutif laporan berdasarkan data Google Sheets...
+                </p>
+            </div>
+
+            <div class="report-stats">
+                <div>
+                    <div class="report-stat-label">Total Berita</div>
+                    <div class="report-stat-value blue" data-target="0">0</div>
+                </div>
+                <div>
+                    <div class="report-stat-label">Sentimen Positif</div>
+                    <div class="report-stat-value green" data-target="0">0%</div>
+                </div>
+                <div>
+                    <div class="report-stat-label">Sentimen Negatif</div>
+                    <div class="report-stat-value red" data-target="0">0%</div>
+                </div>
+            </div>
+            
+            <!-- NEW: section-sentiment -->
+            <div id="section-sentiment" style="display: none;">
+                <h3 class="report-section-title">SKOR KESEHATAN SENTIMEN</h3>
+                <div class="gauge-section" style="margin-bottom: var(--space-8);">
+                    <div class="chart-canvas-container" style="max-width: 320px; margin: 0 auto;">
+                        <canvas id="gauge-chart-report"></canvas>
+                    </div>
+                    <div style="text-align: center; margin-top: -30px; margin-bottom: 20px;">
+                        <span id="report-gauge-score" style="font-size: 2rem; font-weight: bold; color: var(--color-positive);">0%</span>
+                        <div style="font-size: var(--font-sm); color: var(--color-text-light);">Sentimen Positif</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: section-stakeholder -->
+            <div id="section-stakeholder" style="display: none;">
+                <h3 class="report-section-title">ANALISIS STAKEHOLDER</h3>
+                <div class="report-stats" style="margin-bottom: var(--space-8);">
+                    <div>
+                        <div class="report-stat-label">Total Kutipan Tokoh</div>
+                        <div class="report-stat-value blue" id="report-stat-kutipan">0</div>
+                    </div>
+                    <div>
+                        <div class="report-stat-label">Tokoh Terpopuler</div>
+                        <div class="report-stat-value" id="report-stat-tokoh" style="font-size: 1.25rem; font-weight: 700;">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-trend">
+                <h3 class="report-section-title" id="report-trend-title">TREN VOLUME BERITA HARIAN</h3>
+                <div class="chart-canvas-container" style="height: 300px;">
+                    <canvas id="daily-trend-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="main-footer">
+            <p>&copy; 2026 PT Pusri Palembang. Seluruh Hak Cipta Dilindungi. Sistem Monitoring Media Digital v2.4.0</p>
+        </footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/id.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js?v=2.4.2"></script>
+    <script src="js/reports.js?v=2.4.2"></script>
+</body>
+</html>

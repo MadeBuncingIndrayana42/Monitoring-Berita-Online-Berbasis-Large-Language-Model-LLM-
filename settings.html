@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pengaturan Sistem - Sistem Analisis Sentimen PR PT Pupuk Sriwidjaja Palembang">
+    <title>Settings - PR Media Monitoring</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <!-- Top Bar -->
+    <header class="topbar" id="topbar"></header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <div class="settings-container">
+            <!-- Left Navigation Menu (Tabs) -->
+            <div class="settings-sidebar-menu">
+                <button class="settings-tab-btn" data-tab="profile">
+                    <span>Profil Pengguna</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+                <button class="settings-tab-btn active" data-tab="integration">
+                    <span>Integrasi Data</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+
+                <button class="settings-tab-btn" data-tab="notifications">
+                    <span>Notifikasi</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Right Content Card -->
+            <div class="settings-content-card">
+
+                <!-- Tab: Profil Pengguna -->
+                <div class="tab-content" id="tab-profile" style="display: none;">
+                    <div class="settings-card-header">
+                        <h3 class="settings-card-title">Profil Pengguna</h3>
+                        <p class="settings-card-subtitle">Perbarui informasi profil dan detail kontak akun Anda.</p>
+                    </div>
+
+                    <!-- Profile Photo Section -->
+                    <div class="settings-section">
+                        <div class="profile-upload-area">
+                            <div class="profile-avatar-large" id="profile-avatar-container">
+                                <!-- Populated dynamically by settings.js via auth.js -->
+                            </div>
+                            <div class="profile-upload-details">
+                                <h4>Foto Profil</h4>
+                                <p>Foto profil Anda dikelola dan disinkronkan secara otomatis dari akun Google Anda.</p>
+                                <div class="profile-upload-buttons">
+                                    <span class="badge"
+                                        style="background:var(--color-primary-bg); color:var(--color-primary); padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600;">Terhubung
+                                        dengan Google</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- General Info Form -->
+                    <div class="settings-section">
+                        <div class="settings-form-grid">
+                            <div class="report-field">
+                                <label>Nama Lengkap</label>
+                                <input type="text" id="profile-fullname" readonly
+                                    style="background: var(--color-bg); cursor: not-allowed; border-color: var(--color-border);">
+                            </div>
+                            <div class="report-field">
+                                <label>Alamat Email</label>
+                                <input type="email" id="profile-email" readonly
+                                    style="background: var(--color-bg); cursor: not-allowed; border-color: var(--color-border);">
+                            </div>
+                            <div class="report-field">
+                                <label>Peran / Jabatan</label>
+                                <input type="text" id="profile-role" value="Corporate Communication Lead" readonly
+                                    style="background: var(--color-bg); cursor: not-allowed; border-color: var(--color-border);">
+                            </div>
+                            <div class="report-field">
+                                <label>Departemen</label>
+                                <input type="text" id="profile-dept" value="Departemen Hubungan Masyarakat" readonly
+                                    style="background: var(--color-bg); cursor: not-allowed; border-color: var(--color-border);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Removed Change Password Section (Managed by Google) -->
+                </div>
+
+                <!-- Tab: Integrasi Data -->
+                <div class="tab-content" id="tab-integration">
+                    <div class="settings-card-header">
+                        <h3 class="settings-card-title">Pengaturan Integrasi Data</h3>
+                        <p class="settings-card-subtitle">Kelola koneksi sumber berita dan database pelaporan untuk
+                            analitik real-time.</p>
+                    </div>
+
+                    <!-- 1. Sumber Berita (RSS Feeds) -->
+                    <div class="settings-section">
+                        <h4 class="settings-section-title">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-7 0a1 1 0 11-2 0 1 1 0 012 0z">
+                                </path>
+                            </svg>
+                            Sumber Berita (RSS Feeds)
+                        </h4>
+
+                        <div class="report-field">
+                            <label>URL RSS Feed Nasional & Lokal</label>
+                            <div class="settings-input-row">
+                                <input type="text" id="rss-feed-input" placeholder="https://news-source.com/rss"
+                                    value="https://news-source.com/rss">
+                                <button class="btn btn-primary" id="btn-add-rss">Tambahkan</button>
+                            </div>
+                        </div>
+
+                        <!-- Feeds List -->
+                        <div class="settings-list-items" id="rss-feeds-list">
+                            <div class="settings-list-item">
+                                <div class="settings-list-item-left">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+                                        </path>
+                                    </svg>
+                                    <span>Antara News Sumsel</span>
+                                </div>
+                                <button class="settings-list-item-delete" title="Hapus sumber">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="settings-list-item">
+                                <div class="settings-list-item-left">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+                                        </path>
+                                    </svg>
+                                    <span>Tribun Sumsel</span>
+                                </div>
+                                <button class="settings-list-item-delete" title="Hapus sumber">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                        </path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Database Laporan (Google Sheets) -->
+                    <div class="settings-section">
+                        <div class="settings-section-title-row">
+                            <h4 class="settings-section-title">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                                Database Laporan (Google Sheets)
+                            </h4>
+                            <span class="connection-badge">• Connected</span>
+                        </div>
+
+                        <div class="report-field">
+                            <label>Koneksi Google Sheets (CSV Export URL)</label>
+                            <div class="settings-input-with-button">
+                                <input type="text" id="google-sheets-url"
+                                    placeholder="Masukkan URL CSV Google Sheets Anda..."
+                                    style="padding-right: 140px;">
+                                <button class="settings-input-btn-inside" id="btn-change-sheet">Ubah Koneksi</button>
+                            </div>
+                            <span class="settings-desc-text" id="sheets-edit-hint" style="display:none;">Masukkan URL
+                                CSV publik Google Sheets Anda, lalu klik <strong>Simpan Perubahan</strong>.</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Alert Krisis (Telegram Bot) -->
+                    <div class="settings-section">
+                        <div class="settings-toggle-row">
+                            <h4 class="settings-section-title">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                                    </path>
+                                </svg>
+                                Alert Krisis (Telegram Bot)
+                            </h4>
+                            <div class="switch-container">
+                                <span>Telegram Alert Aktif</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="telegram-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <p class="settings-desc-text">Kirim notifikasi otomatis ke tim PR saat sistem mendeteksi
+                            lonjakan sentimen negatif.</p>
+
+                        <div class="settings-form-grid" id="telegram-config-inputs">
+                            <div class="report-field">
+                                <label>Bot Token</label>
+                                <input type="password" id="telegram-bot-token"
+                                    value="6398492023:AAElk2Lsp0389dkwlskdjfHskd">
+                            </div>
+                            <div class="report-field">
+                                <label>Target Chat ID</label>
+                                <input type="text" id="telegram-chat-id" value="-100238491023">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. n8n Workflow Automation -->
+                    <div class="settings-section">
+                        <div class="settings-section-title-row">
+                            <h4 class="settings-section-title">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                Otomasi Workflow (n8n)
+                            </h4>
+                            <span class="connection-badge" id="n8n-status-badge"
+                                style="background:#fef3c7;color:#d97706;">• Belum Dikonfigurasi</span>
+                        </div>
+                        <p class="settings-desc-text">Hubungkan dashboard ini ke n8n untuk mengotomasi pemrosesan data
+                            berita, trigger workflow scraping, atau sinkronisasi ke sistem lain secara real-time.</p>
+
+                        <div class="report-field">
+                            <label>URL Webhook n8n</label>
+                            <div class="settings-input-row">
+                                <input type="text" id="n8n-webhook-url"
+                                    placeholder="https://your-n8n-instance.com/webhook/media-monitoring">
+                                <button class="btn btn-outline" id="btn-test-n8n" title="Uji Koneksi Webhook n8n">
+                                    <svg id="n8n-test-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        style="width:16px;height:16px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                    <span id="n8n-test-label">Uji Koneksi</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="settings-toggle-row">
+                            <div class="settings-toggle-label-wrap">
+                                <span class="settings-toggle-title">Sinkronisasi Otomatis ke n8n</span>
+                                <span class="settings-toggle-desc">Kirim payload konfigurasi lengkap ke webhook n8n
+                                    setiap kali pengaturan disimpan.</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="n8n-autosync-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="report-field" id="n8n-secret-field" style="display:none;">
+                            <label>Header Otentikasi (Opsional)</label>
+                            <input type="text" id="n8n-auth-header"
+                                placeholder="Bearer TOKEN_ANDA atau kosongkan jika tidak pakai auth">
+                            <span class="settings-desc-text">Nilai ini akan dikirim sebagai header
+                                <code>Authorization</code> pada setiap request ke webhook n8n.</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Tab: Notifikasi -->
+                <div class="tab-content" id="tab-notifications" style="display: none;">
+                    <div class="settings-card-header">
+                        <h3 class="settings-card-title">Pengaturan Notifikasi</h3>
+                        <p class="settings-card-subtitle">Atur preferensi media penyampaian pemberitahuan krisis dan
+                            laporan rutin bulanan.</p>
+                    </div>
+
+                    <!-- Email Reports -->
+                    <div class="settings-section">
+                        <h4 class="settings-section-title">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            Laporan Berkala Melalui Email
+                        </h4>
+
+                        <div class="settings-toggle-row">
+                            <div class="settings-toggle-label-wrap">
+                                <span class="settings-toggle-title">Laporan Ringkasan Harian</span>
+                                <span class="settings-toggle-desc">Kirim ringkasan statistik sentimen setiap pukul 08:00
+                                    WIB ke email admin.</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="notif-daily-email-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="settings-toggle-row">
+                            <div class="settings-toggle-label-wrap">
+                                <span class="settings-toggle-title">Laporan Analisis Mingguan</span>
+                                <span class="settings-toggle-desc">Kirim laporan PDF lengkap setiap hari Senin pukul
+                                    09:00 WIB ke tim Hubungan Masyarakat.</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="notif-weekly-email-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- System & Browser Push -->
+                    <div class="settings-section">
+                        <h4 class="settings-section-title">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                                </path>
+                            </svg>
+                            Notifikasi Browser & Sistem
+                        </h4>
+
+                        <div class="settings-toggle-row">
+                            <div class="settings-toggle-label-wrap">
+                                <span class="settings-toggle-title">Notifikasi Browser Langsung</span>
+                                <span class="settings-toggle-desc">Tampilkan pop-up notifikasi langsung di sudut browser
+                                    ketika ada berita baru terdeteksi.</span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="notif-browser-push-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Alert Threshold -->
+                    <div class="settings-section">
+                        <h4 class="settings-section-title">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z">
+                                </path>
+                            </svg>
+                            Ambang Batas Alarm Krisis
+                        </h4>
+
+                        <div class="report-field">
+                            <label>Sensitivitas Alarm Sentimen Negatif</label>
+                            <select id="alert-threshold-select">
+                                <option value="10">Kritis (Sentimen negatif &gt; 10% volume harian)</option>
+                                <option value="20" selected>Sedang (Sentimen negatif &gt; 20% volume harian)</option>
+                                <option value="30">Tinggi (Sentimen negatif &gt; 30% volume harian)</option>
+                            </select>
+                            <span class="settings-desc-text">Alarm via Telegram Bot akan dipicu jika rasio berita
+                                bersentimen negatif dalam satu hari melebihi batas ini.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Save Bar (Visible across all tabs) -->
+                <div class="settings-action-bar">
+                    <button class="btn btn-primary" id="btn-save-settings">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Simpan Perubahan
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="main-footer">
+            <p>&copy; 2026 PT Pusri Palembang. Seluruh Hak Cipta Dilindungi. Sistem Monitoring Media Digital v2.4.0</p>
+        </footer>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js?v=2.4.2"></script>
+    <script src="js/settings.js?v=2.4.2"></script>
+</body>
+
+</html>

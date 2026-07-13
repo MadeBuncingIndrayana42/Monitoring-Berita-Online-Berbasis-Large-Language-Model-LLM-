@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pusat Bantuan - Sistem Analisis Sentimen PR PT Pupuk Sriwidjaja Palembang">
+    <title>Bantuan - PR Media Monitoring</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <!-- Top Bar -->
+    <header class="topbar" id="topbar"></header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Center Help Header Section -->
+        <div class="help-hero-section">
+            <h2 class="help-hero-title">Pusat Bantuan & Panduan Sistem</h2>
+            <p class="help-hero-subtitle">Temukan jawaban untuk mengelola Dashboard Media Monitoring.</p>
+            
+            <div class="help-search-wrapper">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="help-search-input" placeholder="Cari panduan... (misal: cara tambah RSS)">
+            </div>
+        </div>
+
+        <!-- 3 Cards Row Grid -->
+        <div class="help-cards-grid">
+            <!-- Card 1: Manajemen Sumber Data -->
+            <div class="help-card animate-fade-in-up">
+                <div class="help-card-icon-container blue">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                </div>
+                <h3 class="help-card-title">Manajemen Sumber Data</h3>
+                <p class="help-card-text">Cara menambah link RSS baru dan menghubungkan Google Sheets untuk input manual.</p>
+                <a href="#" class="help-card-link blue-link">
+                    Baca Selengkapnya
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+
+            <!-- Card 2: Memahami Analisis Sentimen -->
+            <div class="help-card animate-fade-in-up">
+                <div class="help-card-icon-container green">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                </div>
+                <h3 class="help-card-title">Memahami Analisis Sentimen</h3>
+                <p class="help-card-text">Penjelasan metrik positif, negatif, dan cara kerja kecerdasan buatan dalam mengklasifikasikan berita.</p>
+                <a href="#" class="help-card-link green-link">
+                    Buka Tutorial
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+
+            <!-- Card 3: Pemecahan Masalah -->
+            <div class="help-card animate-fade-in-up">
+                <div class="help-card-icon-container red">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
+                </div>
+                <h3 class="help-card-title">Pemecahan Masalah</h3>
+                <p class="help-card-text">Langkah pertama jika data berita gagal dimuat, error sinkronisasi, atau kendala akses dashboard.</p>
+                <a href="#" class="help-card-link purple-link">
+                    Cari Solusi
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- FAQ and Support Columns Grid -->
+        <div class="help-faq-support-grid">
+            <!-- Left: FAQ list -->
+            <div class="help-faq-container">
+                <div class="help-faq-header">
+                    <h3 class="help-faq-title">Pertanyaan yang Sering Diajukan (FAQ)</h3>
+                    <a href="#" class="help-faq-all-link">Lihat Semua FAQ</a>
+                </div>
+
+                <!-- FAQ Accordion items -->
+                <div class="faq-accordion-list">
+                    <div class="faq-item">
+                        <button class="faq-question-btn">
+                            <span>Bagaimana sistem ini mencegah berita duplikat?</span>
+                            <svg class="faq-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Sistem ini menggunakan algoritma hash (SHA-256) unik pada kombinasi judul berita dan URL. Berita baru yang memiliki kecocokan hash 100% dengan data yang sudah terdaftar di database Google Sheets akan otomatis diabaikan oleh engine sinkronisasi untuk menjaga kualitas data analisis.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question-btn">
+                            <span>Apakah saya perlu mengaktifkan server setiap hari?</span>
+                            <svg class="faq-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Tidak. Seluruh visualisasi dashboard di-render secara dinamis di sisi klien, dan auto-sync berjalan otomatis di latar belakang setiap 60 detik selama tab dashboard Anda tetap terbuka di browser. Di sisi server, XAMPP hanya bertindak sebagai host lokal statis yang tidak memerlukan intervensi harian.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question-btn">
+                            <span>Cara mengubah grup notifikasi di Telegram?</span>
+                            <svg class="faq-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Anda dapat mengubahnya melalui menu <strong>Settings</strong> > <strong>Integrasi Data</strong> > bagian <strong>Alert Krisis (Telegram Bot)</strong>. Masukkan ID grup Telegram baru Anda pada kolom <em>Target Chat ID</em>. Pastikan bot Anda (@PusriMediaIntelligenceBot) sudah ditambahkan sebagai admin di dalam grup baru tersebut agar bot dapat mengirimkan pesan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Support panel -->
+            <div class="help-support-card">
+                <h3 class="help-support-title">Butuh Bantuan Lebih Lanjut?</h3>
+                <p class="help-support-text">Untuk perubahan konfigurasi tingkat lanjut, integrasi khusus, atau kendala sistem yang mendalam, silakan hubungi Administrator IT kami.</p>
+                
+                <div class="help-support-image-container">
+                    <img src="it_support_admin.png" alt="IT Support Administrator" class="help-support-image">
+                </div>
+
+                <a href="mailto:support.it@pusri.co.id" class="btn help-support-btn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    Hubungi Tim IT
+                </a>
+            </div>
+        </div>
+
+        <!-- Help Page Footer (links on right) -->
+        <footer class="help-footer">
+            <p class="copyright">© 2026 PT Pusri Palembang. Seluruh Hak Cipta Dilindungi. Sistem Monitoring Media Digital v2.4.0</p>
+            <div class="help-footer-links">
+                <a href="#">Syarat & Ketentuan</a>
+                <a href="#">Kebijakan Privasi</a>
+                <a href="#">Dokumentasi API</a>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Global Layout Injector Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js?v=2.4.2"></script>
+    <script src="js/help.js?v=2.4.2"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis Sentimen - PR Dashboard Media Monitoring</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <!-- Topbar -->
+  <header class="topbar" id="topbar"></header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="page-header-row">
+        <div>
+          <h2>Analisis Sentimen</h2>
+          <p>Pantau persepsi publik terhadap brand PT Pusri Palembang secara real-time.</p>
+        </div>
+        <div class="page-header-actions">
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar" style="margin-bottom: var(--space-4);">
+        <div class="filter-group">
+            <span class="filter-label">Waktu:</span>
+            <select class="filter-select" id="filter-time">
+                <option value="Semua">Semua Waktu</option>
+                <option value="Minggu">7 Hari Terakhir</option>
+                <option value="Bulan">30 Hari Terakhir</option>
+                <option value="Tahun">Tahun Ini</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Chart Grid: Gauge + Trend -->
+    <div class="chart-grid">
+
+      <!-- LEFT: Gauge Chart -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3 class="chart-card-title">Skor Kesehatan Sentimen</h3>
+        </div>
+        <div class="gauge-section">
+          <div class="chart-canvas-container">
+            <canvas id="gauge-chart"></canvas>
+          </div>
+          <div class="gauge-value" id="gauge-value">--</div>
+          <span class="gauge-label" id="gauge-badge">Memuat data...</span>
+          <p class="gauge-change" id="gauge-change">Menghubungkan ke Google Sheets...</p>
+        </div>
+      </div>
+
+      <!-- RIGHT: Stacked Bar Chart -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3 class="chart-card-title" id="trend-chart-title">Tren Sentimen Mingguan</h3>
+          <div class="chart-legend">
+            <div class="chart-legend-item">
+              <span class="chart-legend-dot green"></span>
+              Positif
+            </div>
+            <div class="chart-legend-item">
+              <span class="chart-legend-dot gray"></span>
+              Netral
+            </div>
+            <div class="chart-legend-item">
+              <span class="chart-legend-dot red"></span>
+              Negatif
+            </div>
+          </div>
+        </div>
+        <div class="chart-canvas-container">
+          <canvas id="trend-chart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Full-width: Horizontal Bar Chart (CSS-based) -->
+    <div class="chart-card" style="margin-bottom: var(--space-6);">
+      <div class="chart-card-header">
+        <h3 class="chart-card-title">Perbandingan Sentimen Berdasarkan Sumber Media</h3>
+        <div class="chart-legend">
+          <div class="chart-legend-item">
+            <span class="chart-legend-dot green"></span>
+            Positif
+          </div>
+          <div class="chart-legend-item">
+            <span class="chart-legend-dot gray"></span>
+            Netral
+          </div>
+          <div class="chart-legend-item">
+            <span class="chart-legend-dot red"></span>
+            Negatif
+          </div>
+        </div>
+      </div>
+
+      <div class="h-bar-chart">
+        <div class="loading-state" style="padding: var(--space-6); text-align: center; width: 100%;">
+          <div class="loading-spinner" style="margin: 0 auto var(--space-3) auto;"></div>
+          <p>Memuat perbandingan media...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topic Grid -->
+    <div class="topic-grid">
+
+      <!-- Positive Topics -->
+      <div class="topic-card positive">
+        <div class="topic-card-header">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path></svg>
+          <h3>Topik Pemicu Sentimen Positif</h3>
+        </div>
+        <div class="topic-list">
+          <div class="loading-state" style="padding: var(--space-4); text-align: center; width: 100%;">
+            <div class="loading-spinner" style="margin: 0 auto var(--space-2) auto; width: 24px; height: 24px; border-width: 2px;"></div>
+            <p style="font-size: var(--font-xs);">Memuat topik...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Negative Topics -->
+      <div class="topic-card negative">
+        <div class="topic-card-header">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018c.163 0 .326.02.485.06L17 4m-7 10v2a2 2 0 002 2h.095c.5 0 .905-.405.905-.905 0-.714.211-1.412.608-2.006L17 13V4m-7 10h2m5-6h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path></svg>
+          <h3>Topik Pemicu Sentimen Negatif</h3>
+        </div>
+        <div class="topic-list">
+          <div class="loading-state" style="padding: var(--space-4); text-align: center; width: 100%;">
+            <div class="loading-spinner" style="margin: 0 auto var(--space-2) auto; width: 24px; height: 24px; border-width: 2px;"></div>
+            <p style="font-size: var(--font-xs);">Memuat topik...</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <p>&copy; 2026 PT Pusri Palembang. Seluruh Hak Cipta Dilindungi. Sistem Monitoring Media Digital v2.4.0</p>
+    </footer>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js?v=2.4.2"></script>
+  <script src="js/sentiment.js?v=2.4.2"></script>
+
+</body>
+</html>
