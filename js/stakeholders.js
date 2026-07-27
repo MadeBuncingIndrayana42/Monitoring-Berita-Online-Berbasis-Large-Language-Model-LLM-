@@ -8,6 +8,12 @@ let tableSearchQuery = '';
 let tableCurrentPage = 1;
 const ITEMS_PER_PAGE = 5;
 
+// Profile cards pagination
+let profileCurrentPage = 1;
+const PROFILES_PER_PAGE = 9;
+let allProfileKeys = [];
+let allProfilesData = {};
+
 /* No hardcoded stakeholder template — built purely from CSV data */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLayout('Stakeholder Analysis', 'Monitoring pengaruh dan sentimen tokoh kunci industri');
 
   setupSearchFilter();
+  setupProfilePagination();
 
   // Apply filter change
   const timeSelect = document.getElementById('filter-time');
@@ -86,8 +93,11 @@ function updateStakeholdersPage(data) {
   // 2. Update Stats Cards
   updateStatsCards(stakeholdersData, sheetMentionsCount);
 
-  // 3. Render Profile Cards
-  renderProfileCards(stakeholdersData);
+  // 3. Store profiles globally and render
+  allProfilesData = stakeholdersData;
+  allProfileKeys = Object.keys(stakeholdersData).filter(k => stakeholdersData[k].mentions > 0);
+  profileCurrentPage = 1;
+  renderProfileCards();
 
   // 4. Render Statements Table
   renderStatementsTable(data);
@@ -176,27 +186,34 @@ function animateNumber(elementId, target) {
 }
 
 /* ============================================
-   PROFILE CARDS RENDER
+   PROFILE CARDS RENDER (with pagination)
    ============================================ */
-function renderProfileCards(stakeholders) {
+function renderProfileCards() {
   const container = document.querySelector('.profile-grid');
   if (!container) return;
 
-  // Render stakeholders that have mentions > 0.
-  // Render stakeholders that have mentions > 0.
-  let renderList = Object.keys(stakeholders).filter(k => stakeholders[k].mentions > 0);
-
   container.innerHTML = '';
-  if (renderList.length === 0) {
+
+  if (allProfileKeys.length === 0) {
     container.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1; padding: var(--space-6); text-align: center; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-xl); color: var(--color-text-light);">
         <p>Tidak ada tokoh/stakeholder terpantau dalam data sheet.</p>
       </div>
     `;
+    updateProfilePaginationUI();
     return;
   }
-  renderList.forEach((key, idx) => {
-    const s = stakeholders[key];
+
+  const totalPages = Math.ceil(allProfileKeys.length / PROFILES_PER_PAGE);
+  if (profileCurrentPage > totalPages) profileCurrentPage = totalPages;
+  if (profileCurrentPage < 1) profileCurrentPage = 1;
+
+  const startIdx = (profileCurrentPage - 1) * PROFILES_PER_PAGE;
+  const endIdx = Math.min(startIdx + PROFILES_PER_PAGE, allProfileKeys.length);
+  const pageKeys = allProfileKeys.slice(startIdx, endIdx);
+
+  pageKeys.forEach((key, idx) => {
+    const s = allProfilesData[key];
     if (!s) return;
 
     let posPct = 0, neuPct = 0, negPct = 0;
@@ -207,7 +224,7 @@ function renderProfileCards(stakeholders) {
     }
 
     const cardHtml = `
-      <div class="profile-card" style="opacity: 0; animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${0.1 + idx * 0.12}s forwards;">
+      <div class="profile-card" style="opacity: 0; animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${0.05 + idx * 0.08}s forwards;">
         <div class="profile-card-top">
           <div class="avatar ${s.avatarClass}">${s.initials}</div>
           <div>
@@ -243,6 +260,84 @@ function renderProfileCards(stakeholders) {
       if (w) seg.style.width = w + '%';
     });
   }, 200);
+
+  updateProfilePaginationUI();
+}
+
+/* ============================================
+   PROFILE PAGINATION UI
+   ============================================ */
+function updateProfilePaginationUI() {
+  const paginationEl = document.getElementById('profile-pagination');
+  const infoEl = document.getElementById('profile-pagination-info');
+  const pagesEl = document.getElementById('profile-pagination-pages');
+  const prevBtn = document.getElementById('profile-prev-btn');
+  const nextBtn = document.getElementById('profile-next-btn');
+
+  if (!paginationEl) return;
+
+  const totalPages = Math.ceil(allProfileKeys.length / PROFILES_PER_PAGE);
+
+  if (totalPages <= 1) {
+    paginationEl.style.display = 'none';
+    return;
+  }
+
+  paginationEl.style.display = 'flex';
+
+  const startIdx = (profileCurrentPage - 1) * PROFILES_PER_PAGE + 1;
+  const endIdx = Math.min(profileCurrentPage * PROFILES_PER_PAGE, allProfileKeys.length);
+  if (infoEl) infoEl.textContent = `Menampilkan ${startIdx}–${endIdx} dari ${allProfileKeys.length} tokoh`;
+
+  if (prevBtn) prevBtn.disabled = profileCurrentPage === 1;
+  if (nextBtn) nextBtn.disabled = profileCurrentPage === totalPages;
+
+  if (pagesEl) {
+    pagesEl.innerHTML = '';
+    const maxVisible = 5;
+    let startPage = Math.max(1, profileCurrentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+    if (endPage - startPage < maxVisible - 1) {
+      startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+    for (let i = startPage; i <= endPage; i++) {
+      const btn = document.createElement('button');
+      btn.className = `pagination-page-btn${i === profileCurrentPage ? ' active' : ''}`;
+      btn.textContent = i;
+      btn.addEventListener('click', () => {
+        profileCurrentPage = i;
+        renderProfileCards();
+        document.querySelector('.profile-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      pagesEl.appendChild(btn);
+    }
+  }
+}
+
+function setupProfilePagination() {
+  const prevBtn = document.getElementById('profile-prev-btn');
+  const nextBtn = document.getElementById('profile-next-btn');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (profileCurrentPage > 1) {
+        profileCurrentPage--;
+        renderProfileCards();
+        document.querySelector('.profile-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const totalPages = Math.ceil(allProfileKeys.length / PROFILES_PER_PAGE);
+      if (profileCurrentPage < totalPages) {
+        profileCurrentPage++;
+        renderProfileCards();
+        document.querySelector('.profile-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
 }
 
 /* ============================================

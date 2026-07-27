@@ -10,9 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup filter listeners
   setupFilters();
 
+  // Setup pagination listeners
+  setupNewsPagination();
+
   // Start background auto-sync polling
   startAutoSync((data) => {
     allNewsData = data;
+    newsCurrentPage = 1;
     applyFilters();
   });
 });
@@ -21,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
    CONFIG
    ============================================ */
 let allNewsData = [];
+let filteredNewsData = [];
+let newsCurrentPage = 1;
+const NEWS_PER_PAGE = 9;
 
 /* ============================================
    UPDATE STAT CARDS
@@ -84,10 +91,11 @@ function animateNumber(elementId, target) {
 }
 
 /* ============================================
-   RENDER NEWS CARDS
+   RENDER NEWS CARDS (with pagination)
    ============================================ */
 function renderNewsCards(data) {
   const container = document.getElementById('news-container');
+  const paginationEl = document.getElementById('news-pagination');
   container.innerHTML = '';
 
   if (data.length === 0) {
@@ -97,10 +105,19 @@ function renderNewsCards(data) {
         <p>Tidak ada berita ditemukan.</p>
       </div>
     `;
+    if (paginationEl) paginationEl.style.display = 'none';
     return;
   }
 
-  data.forEach((row, index) => {
+  const totalPages = Math.ceil(data.length / NEWS_PER_PAGE);
+  if (newsCurrentPage > totalPages) newsCurrentPage = totalPages;
+  if (newsCurrentPage < 1) newsCurrentPage = 1;
+
+  const startIdx = (newsCurrentPage - 1) * NEWS_PER_PAGE;
+  const endIdx = Math.min(startIdx + NEWS_PER_PAGE, data.length);
+  const pageData = data.slice(startIdx, endIdx);
+
+  pageData.forEach((row, index) => {
     const card = document.createElement('div');
     card.className = 'news-card';
     card.style.animationDelay = `${index * 0.05}s`;
@@ -124,6 +141,95 @@ function renderNewsCards(data) {
 
     container.appendChild(card);
   });
+
+  // Update pagination UI
+  updateNewsPaginationUI(data.length, totalPages);
+}
+
+/* ============================================
+   PAGINATION UI
+   ============================================ */
+function updateNewsPaginationUI(totalItems, totalPages) {
+  const paginationEl = document.getElementById('news-pagination');
+  const infoEl = document.getElementById('news-pagination-info');
+  const pagesEl = document.getElementById('news-pagination-pages');
+  const prevBtn = document.getElementById('news-prev-btn');
+  const nextBtn = document.getElementById('news-next-btn');
+
+  if (!paginationEl) return;
+
+  if (totalPages <= 1 && totalItems <= NEWS_PER_PAGE) {
+    paginationEl.style.display = 'none';
+    return;
+  }
+
+  paginationEl.style.display = 'flex';
+
+  const startIdx = (newsCurrentPage - 1) * NEWS_PER_PAGE + 1;
+  const endIdx = Math.min(newsCurrentPage * NEWS_PER_PAGE, totalItems);
+  if (infoEl) infoEl.textContent = `Menampilkan ${startIdx}–${endIdx} dari ${totalItems} berita`;
+
+  if (prevBtn) prevBtn.disabled = newsCurrentPage === 1;
+  if (nextBtn) nextBtn.disabled = newsCurrentPage === totalPages;
+
+  // Render page number buttons
+  if (pagesEl) {
+    pagesEl.innerHTML = '';
+    const maxVisible = 5;
+    let startPage = Math.max(1, newsCurrentPage - Math.floor(maxVisible / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+    if (endPage - startPage < maxVisible - 1) {
+      startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      const btn = document.createElement('button');
+      btn.className = `pagination-page-btn${i === newsCurrentPage ? ' active' : ''}`;
+      btn.textContent = i;
+      btn.addEventListener('click', () => {
+        newsCurrentPage = i;
+        renderNewsCards(filteredNewsData);
+        scrollToNewsTop();
+      });
+      pagesEl.appendChild(btn);
+    }
+  }
+}
+
+function scrollToNewsTop() {
+  const container = document.getElementById('news-container');
+  if (container) {
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+/* ============================================
+   SETUP PAGINATION CONTROLS
+   ============================================ */
+function setupNewsPagination() {
+  const prevBtn = document.getElementById('news-prev-btn');
+  const nextBtn = document.getElementById('news-next-btn');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (newsCurrentPage > 1) {
+        newsCurrentPage--;
+        renderNewsCards(filteredNewsData);
+        scrollToNewsTop();
+      }
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const totalPages = Math.ceil(filteredNewsData.length / NEWS_PER_PAGE);
+      if (newsCurrentPage < totalPages) {
+        newsCurrentPage++;
+        renderNewsCards(filteredNewsData);
+        scrollToNewsTop();
+      }
+    });
+  }
 }
 
 /* ============================================
@@ -198,6 +304,10 @@ function applyFilters() {
     });
   }
 
-  renderNewsCards(filtered);
+  // Reset to page 1 saat filter berubah
+  newsCurrentPage = 1;
+  filteredNewsData = filtered;
+
+  renderNewsCards(filteredNewsData);
   updateStats(filtered);
 }
