@@ -352,19 +352,22 @@ function initLayout(pageTitle, pageSubtitle) {
 
   if (sidebar) {
     sidebar.innerHTML = getSidebarHTML();
-    // Initialize sidebar interactions and active highlights
+    // Set active nav state
     initSidebar();
-    initMobileMenu();
   }
   if (topbar) {
     topbar.innerHTML = getTopbarHTML(pageTitle, pageSubtitle);
     // Dynamic topbar actions
     initClock();
     initTopbarInteractions();
-    
+
     // Start background sync for notifications (if not started already)
     startAutoSync();
   }
+
+  // initMobileMenu HARUS dipanggil SETELAH topbar diinjeksi
+  // karena hamburger-btn ada di dalam topbar, bukan sidebar
+  initMobileMenu();
 
   // Inject Sync status CSS styles
   injectSyncStyles();
