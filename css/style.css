@@ -3609,6 +3609,136 @@ input:checked + .slider:before {
 
 /* --- RESPONSIVE --- */
 
+/* ============================================
+   MOBILE & TABLET - SIDEBAR + LAYOUT
+   ============================================ */
+
+/* Tablet (1024px ke bawah) */
+@media (max-width: 1024px) {
+  /* Sidebar: geser ke kiri, tersembunyi */
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 100;
+    box-shadow: var(--shadow-xl);
+  }
+
+  /* Sidebar muncul saat kelas 'open' ditambahkan */
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Topbar: mulai dari kiri penuh, bukan dari sidebar */
+  .topbar {
+    left: 0;
+  }
+
+  /* Hamburger button: tampilkan */
+  .topbar-hamburger {
+    display: flex;
+  }
+
+  /* Main content: hapus margin sidebar */
+  .main-content {
+    margin-left: 0;
+  }
+
+  /* Stats grid: 2 kolom */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile (768px ke bawah) */
+@media (max-width: 768px) {
+  /* Topbar padding lebih kecil */
+  .topbar {
+    padding: 0 var(--space-4);
+  }
+
+  /* Sembunyikan clock di mobile agar tidak overflow */
+  .topbar-clock {
+    display: none;
+  }
+
+  /* Main content padding lebih kecil */
+  .main-content {
+    padding: var(--space-4);
+  }
+
+  /* Stats grid: 1 kolom */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  /* Filter bar: stack vertikal */
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .filter-select {
+    width: 100%;
+  }
+
+  .search-input-wrapper {
+    width: 100%;
+  }
+
+  /* News grid: 1 kolom */
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Page header: stack vertikal */
+  .page-header-row {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .page-header-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  /* Topbar title: kurangi ukuran teks */
+  .topbar-title h1 {
+    font-size: var(--font-base);
+  }
+
+  .topbar-title p {
+    display: none;
+  }
+}
+
+/* Small mobile (480px ke bawah) */
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0 var(--space-3);
+  }
+
+  .main-content {
+    padding: var(--space-3);
+  }
+
+  .topbar-divider {
+    display: none;
+  }
+
+  /* Kurangi lebar sidebar agar pas di layar kecil */
+  .sidebar {
+    width: 260px;
+  }
+}
+
+/* Login page responsive */
+
 /* Tablet */
 @media (max-width: 1024px) {
   .login-branding {
