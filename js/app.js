@@ -896,3 +896,118 @@ function detectStakeholder(row) {
   }
   return null;
 }
+
+/* ============================================
+   MOBILE ANIMATION HELPERS
+   ============================================ */
+
+/**
+ * Render Chart.js dengan aman di mobile.
+ * Menunggu canvas punya dimensi nyata sebelum membuat chart,
+ * lalu memanggil chart.resize() untuk memastikan ukuran benar.
+ *
+ * @param {HTMLCanvasElement} canvasEl - elemen canvas
+ * @param {Function} createFn - fungsi yang menerima canvas dan mengembalikan Chart instance
+ * @returns {Promise<Chart|null>}
+ */
+window.renderChartSafe = function(canvasEl, createFn) {
+  return new Promise((resolve) => {
+    if (!canvasEl) { resolve(null); return; }
+
+    function tryRender() {
+      const rect = canvasEl.getBoundingClientRect();
+      // Canvas harus punya lebar nyata sebelum render
+      if (rect.width > 0) {
+        const instance = createFn(canvasEl);
+        // Paksa resize setelah render agar animasi muncul
+        requestAnimationFrame(() => {
+          if (instance) instance.resize();
+          resolve(instance);
+        });
+      } else {
+        // Coba lagi di frame berikutnya (layout belum selesai)
+        requestAnimationFrame(tryRender);
+      }
+    }
+
+    requestAnimationFrame(tryRender);
+  });
+};
+
+/**
+ * Aktifkan animasi CSS pada elemen-elemen yang menggunakan
+ * opacity:0 + animation:fadeInUp, hanya saat elemen masuk viewport.
+ * Mencegah animasi "hilang" karena dijalankan sebelum elemen terlihat.
+ *
+ * @param {string} selector - CSS selector elemen yang akan diobservasi
+ */
+window.observeAnimations = function(selector) {
+  const elements = document.querySelectorAll(selector);
+  if (!elements.length) return;
+
+  // Jika IntersectionObserver tidak tersedia (browser lama), langsung tampilkan
+  if (!('IntersectionObserver' in window)) {
+    elements.forEach(el => { el.style.opacity = '1'; });
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Trigger animasi dengan sedikit delay agar layout stabil
+        const el = entry.target;
+        const currentDelay = el.style.animationDelay || '0s';
+        el.style.animationPlayState = 'running';
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  elements.forEach(el => {
+    // Pause animasi dulu, baru play saat masuk viewport
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+};
+
+/**
+ * Animasikan horizontal bars dengan IntersectionObserver.
+ * Trigger bar fill hanya saat container masuk viewport.
+ *
+ * @param {string} containerSelector - selector container yang berisi .h-bar-segment
+ */
+window.observeHorizontalBars = function(containerSelector) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
+
+  function startAnimation() {
+    const rows = container.querySelectorAll('.h-bar-row');
+    rows.forEach((row, rowIndex) => {
+      const segments = row.querySelectorAll('.h-bar-segment');
+      segments.forEach(seg => seg.style.width = '0%');
+
+      setTimeout(() => {
+        segments.forEach(seg => {
+          const targetWidth = seg.getAttribute('data-width');
+          if (targetWidth) seg.style.width = targetWidth + '%';
+        });
+      }, 150 + rowIndex * 120);
+    });
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    startAnimation();
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        startAnimation();
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  observer.observe(container);
+};

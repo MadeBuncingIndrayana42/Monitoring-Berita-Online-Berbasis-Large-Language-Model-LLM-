@@ -132,45 +132,49 @@ function createGaugeChart(score) {
   // Draw chart
   if (gaugeChartInstance) {
     gaugeChartInstance.destroy();
+    gaugeChartInstance = null;
   }
 
-  gaugeChartInstance = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      datasets: [{
-        data: [score, remaining],
-        backgroundColor: [
-          createGaugeGradient(ctx, score),
-          '#e2e8f0'
-        ],
-        borderWidth: 0,
-        cutout: '78%',
-        borderRadius: 6
-      }]
-    },
-    options: {
-      rotation: -90,
-      circumference: 180,
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false }
+  // Gunakan renderChartSafe agar canvas punya ukuran sebelum animasi jalan
+  window.renderChartSafe(ctx, (canvas) => {
+    return new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [score, remaining],
+          backgroundColor: [
+            createGaugeGradient(ctx, score),
+            '#e2e8f0'
+          ],
+          borderWidth: 0,
+          cutout: '78%',
+          borderRadius: 6
+        }]
       },
-      animation: {
-        duration: 1800,
-        easing: 'easeInOutCubic',
-        onProgress: function(animation) {
-          const progress = animation.currentStep / animation.numSteps;
-          const currentScore = Math.round(score * progress);
-          if (valEl) valEl.textContent = currentScore + '%';
+      options: {
+        rotation: -90,
+        circumference: 180,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
         },
-        onComplete: function() {
-          if (valEl) valEl.textContent = score + '%';
+        animation: {
+          duration: 1800,
+          easing: 'easeInOutCubic',
+          onProgress: function(animation) {
+            const progress = animation.currentStep / animation.numSteps;
+            const currentScore = Math.round(score * progress);
+            if (valEl) valEl.textContent = currentScore + '%';
+          },
+          onComplete: function() {
+            if (valEl) valEl.textContent = score + '%';
+          }
         }
       }
-    }
-  });
+    });
+  }).then(instance => { gaugeChartInstance = instance; });
 }
 
 function createGaugeGradient(canvas, score) {
@@ -261,88 +265,91 @@ function createTrendChart(data, timeFilter) {
 
   if (trendChartInstance) {
     trendChartInstance.destroy();
+    trendChartInstance = null;
   }
 
-  trendChartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: 'Positif',
-          data: positifData,
-          backgroundColor: '#16a34a',
-          borderRadius: 4,
-          borderSkipped: false
-        },
-        {
-          label: 'Netral',
-          data: netralData,
-          backgroundColor: '#d1d5db',
-          borderRadius: 4,
-          borderSkipped: false
-        },
-        {
-          label: 'Negatif',
-          data: negatifData,
-          backgroundColor: '#f87171',
-          borderRadius: 4,
-          borderSkipped: false
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          stacked: true,
-          grid: { display: false },
-          ticks: {
-            font: { family: 'Inter', size: 12, weight: '500' },
-            color: '#64748b'
-          }
-        },
-        y: {
-          stacked: true,
-          beginAtZero: true,
-          grid: {
-            color: '#e2e8f0',
-            drawBorder: false,
-            borderDash: [5, 5]
+  // Gunakan renderChartSafe agar animasi bar jalan di mobile
+  window.renderChartSafe(ctx, (canvas) => {
+    return new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Positif',
+            data: positifData,
+            backgroundColor: '#16a34a',
+            borderRadius: 4,
+            borderSkipped: false
           },
-          ticks: {
-            stepSize: 1,
-            font: { family: 'Inter', size: 12, weight: '500' },
-            color: '#64748b'
+          {
+            label: 'Netral',
+            data: netralData,
+            backgroundColor: '#d1d5db',
+            borderRadius: 4,
+            borderSkipped: false
+          },
+          {
+            label: 'Negatif',
+            data: negatifData,
+            backgroundColor: '#f87171',
+            borderRadius: 4,
+            borderSkipped: false
           }
-        }
+        ]
       },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#1e293b',
-          titleFont: { family: 'Inter', size: 13, weight: '600' },
-          bodyFont: { family: 'Inter', size: 12 },
-          padding: 12,
-          cornerRadius: 8,
-          callbacks: {
-            label: function(context) {
-              return context.dataset.label + ': ' + context.parsed.y + ' berita';
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            stacked: true,
+            grid: { display: false },
+            ticks: {
+              font: { family: 'Inter', size: 12, weight: '500' },
+              color: '#64748b'
+            }
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            grid: {
+              color: '#e2e8f0',
+              drawBorder: false,
+              borderDash: [5, 5]
+            },
+            ticks: {
+              stepSize: 1,
+              font: { family: 'Inter', size: 12, weight: '500' },
+              color: '#64748b'
             }
           }
-        }
-      },
-      animation: {
-        duration: 1500,
-        easing: 'easeInOutQuart',
-        delay: function(context) {
-          return context.datasetIndex * 300;
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1e293b',
+            titleFont: { family: 'Inter', size: 13, weight: '600' },
+            bodyFont: { family: 'Inter', size: 12 },
+            padding: 12,
+            cornerRadius: 8,
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + context.parsed.y + ' berita';
+              }
+            }
+          }
+        },
+        animation: {
+          duration: 1500,
+          easing: 'easeInOutQuart',
+          delay: function(context) {
+            return context.datasetIndex * 300;
+          }
         }
       }
-    }
-  });
-}
+    });
+  }).then(instance => { trendChartInstance = instance; });
 
 /* ============================================
    3. HORIZONTAL BAR CHART (Media Source Comparison)
@@ -403,6 +410,12 @@ function renderMediaComparison(data) {
   });
 
   animateHorizontalBars();
+  // Gunakan observeHorizontalBars agar animasi trigger saat masuk viewport
+  if (window.observeHorizontalBars) {
+    window.observeHorizontalBars('.h-bar-chart');
+  } else {
+    animateHorizontalBars();
+  }
 }
 
 function animateHorizontalBars() {
@@ -472,6 +485,10 @@ function renderTopics(data) {
       `;
       positiveListEl.insertAdjacentHTML('beforeend', itemHtml);
     });
+    // Trigger animasi fadeInUp saat elemen masuk viewport
+    if (window.observeAnimations) {
+      window.observeAnimations('.topic-card.positive .topic-item');
+    }
   }
 
   // Sort and render negative topics
@@ -497,5 +514,9 @@ function renderTopics(data) {
       `;
       negativeListEl.insertAdjacentHTML('beforeend', itemHtml);
     });
+    // Trigger animasi fadeInUp saat elemen masuk viewport
+    if (window.observeAnimations) {
+      window.observeAnimations('.topic-card.negative .topic-item');
+    }
   }
 }
