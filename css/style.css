@@ -765,6 +765,22 @@ button {
   width: 100%;
 }
 
+/* Tablet: 2 kolom berita */
+@media (max-width: 1024px) {
+  .news-grid {
+    column-count: 2;
+    column-gap: var(--space-4);
+  }
+}
+
+/* Mobile: 1 kolom berita */
+@media (max-width: 768px) {
+  .news-grid {
+    column-count: 1;
+    column-gap: 0;
+  }
+}
+
 .news-card {
   break-inside: avoid;
   margin-bottom: var(--space-6);
@@ -777,6 +793,21 @@ button {
   transition: all var(--transition-base);
   animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .news-card {
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .news-card {
+    padding: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-3);
+  }
 }
 
 .news-card:hover {
@@ -1101,12 +1132,40 @@ button {
   margin-bottom: var(--space-8);
 }
 
+@media (max-width: 1024px) {
+  .profile-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+    margin-bottom: var(--space-6);
+  }
+}
+
 .profile-card {
   background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   transition: all var(--transition-base);
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    padding: var(--space-3) var(--space-4);
+  }
 }
 
 .profile-card:hover {
@@ -1281,6 +1340,7 @@ button {
   gap: var(--space-4);
 }
 
+/* Legend inline (untuk chart bar) */
 .chart-legend-item {
   display: flex;
   align-items: center;
@@ -1293,11 +1353,66 @@ button {
   width: 10px;
   height: 10px;
   border-radius: var(--radius-full);
+  flex-shrink: 0;
 }
 
 .chart-legend-dot.green { background: var(--color-positive); }
 .chart-legend-dot.gray { background: var(--color-neutral-light); }
 .chart-legend-dot.red { background: var(--color-negative); }
+
+/* Custom legend grid untuk doughnut Share of Voice */
+.chart-custom-legend {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.chart-custom-legend .chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-xs);
+  color: var(--color-text-medium);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chart-custom-legend .chart-legend-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-xs);
+  color: var(--color-text);
+}
+
+.chart-custom-legend .chart-legend-pct {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--color-text-light);
+  margin-left: var(--space-1);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .chart-custom-legend {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-custom-legend {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+}
+
 
 .chart-canvas-container {
   position: relative;
@@ -3670,62 +3785,104 @@ input:checked + .slider:before {
    MOBILE & TABLET - SIDEBAR + LAYOUT
    ============================================ */
 
-/* Tablet (1024px ke bawah) */
+/* ====================================================
+   TABLET (≤ 1024px)
+   ==================================================== */
 @media (max-width: 1024px) {
-  /* Sidebar: geser ke kiri, tersembunyi */
+  /* Sidebar: tersembunyi, slide dari kiri */
   .sidebar {
     transform: translateX(-100%);
     z-index: 100;
     box-shadow: var(--shadow-xl);
   }
-
-  /* Sidebar muncul saat kelas 'open' ditambahkan */
   .sidebar.open {
     transform: translateX(0);
   }
 
-  /* Topbar: mulai dari kiri penuh, bukan dari sidebar */
+  /* Topbar full-width */
   .topbar {
     left: 0;
   }
-
-  /* Hamburger button: tampilkan */
   .topbar-hamburger {
     display: flex;
   }
 
-  /* Main content: hapus margin sidebar */
+  /* Main content tanpa margin sidebar */
   .main-content {
     margin-left: 0;
   }
 
-  /* Stats grid: 2 kolom */
+  /* Stats: 2 kolom di tablet */
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  /* Stat card: kompres padding & angka */
+  .stat-card {
+    padding: var(--space-4) var(--space-5);
+  }
+  .stat-card-number {
+    font-size: var(--font-2xl);
   }
 }
 
-/* Mobile (768px ke bawah) */
+/* ====================================================
+   MOBILE (≤ 768px)
+   ==================================================== */
 @media (max-width: 768px) {
-  /* Topbar padding lebih kecil */
+  /* Topbar */
   .topbar {
     padding: 0 var(--space-4);
   }
-
-  /* Sembunyikan clock di mobile agar tidak overflow */
   .topbar-clock {
     display: none;
   }
+  .topbar-title h1 {
+    font-size: var(--font-base);
+  }
+  .topbar-title p {
+    display: none;
+  }
 
-  /* Main content padding lebih kecil */
+  /* Main content */
   .main-content {
     padding: var(--space-4);
   }
 
-  /* Stats grid: 1 kolom */
+  /* Page header */
+  .page-header {
+    margin-bottom: var(--space-5);
+  }
+  .page-header-row {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .page-header-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .page-header h2 {
+    font-size: var(--font-lg);
+  }
+
+  /* Stat cards: 1 kolom, compact */
   .stats-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-4);
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+  .stat-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+  .stat-card-number {
+    font-size: var(--font-2xl);
+  }
+  .stat-card-icon {
+    width: 34px;
+    height: 34px;
   }
 
   /* Filter bar: stack vertikal */
@@ -3733,64 +3890,131 @@ input:checked + .slider:before {
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-3);
+    padding: var(--space-4);
   }
-
   .filter-group {
     width: 100%;
   }
-
   .filter-select {
     width: 100%;
   }
-
   .search-input-wrapper {
     width: 100%;
+    min-width: unset;
   }
 
-  /* News grid: 1 kolom */
-  .news-grid {
-    grid-template-columns: 1fr;
+  /* Tabel: scroll horizontal */
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
-
-  /* Page header: stack vertikal */
-  .page-header-row {
+  .data-table {
+    min-width: 560px;
+  }
+  .data-table thead th,
+  .data-table tbody td {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-xs);
+  }
+  .table-header {
+    padding: var(--space-4);
     flex-direction: column;
+    align-items: flex-start;
+  }
+  .table-footer {
+    padding: var(--space-3) var(--space-4);
+    flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-3);
   }
 
-  .page-header-actions {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+  /* Pagination: compact */
+  .news-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
   }
-
-  /* Topbar title: kurangi ukuran teks */
-  .topbar-title h1 {
-    font-size: var(--font-base);
+  .pagination-btn {
+    padding: var(--space-2);
+    font-size: var(--font-xs);
   }
-
-  .topbar-title p {
+  .pagination-btn span {
     display: none;
+  }
+  .pagination-page-btn {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-xs);
   }
 }
 
-/* Small mobile (480px ke bawah) */
+/* ====================================================
+   SMALL MOBILE (≤ 480px)
+   ==================================================== */
 @media (max-width: 480px) {
+  /* Topbar */
   .topbar {
     padding: 0 var(--space-3);
   }
-
-  .main-content {
-    padding: var(--space-3);
-  }
-
   .topbar-divider {
     display: none;
   }
 
-  /* Kurangi lebar sidebar agar pas di layar kecil */
+  /* Main content */
+  .main-content {
+    padding: var(--space-3);
+  }
+
+  /* Sidebar lebar cukup, tidak penuh layar */
   .sidebar {
     width: 260px;
+  }
+
+  /* Stat card: lebih compact lagi */
+  .stat-card {
+    padding: var(--space-3) var(--space-4);
+  }
+  .stat-card-number {
+    font-size: var(--font-xl);
+  }
+  .stat-card-title {
+    font-size: var(--font-sm);
+  }
+  .stat-card-header {
+    margin-bottom: var(--space-3);
+  }
+
+  /* News card: padding minimum */
+  .news-card-title {
+    font-size: var(--font-base);
+  }
+  .news-card-summary {
+    font-size: var(--font-xs);
+    -webkit-line-clamp: 3;
+  }
+  .news-card-recommendation {
+    padding: var(--space-3);
+  }
+
+  /* Profile card */
+  .profile-card-name {
+    font-size: var(--font-base);
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  /* Pagination: hanya ikon, tanpa teks */
+  .pagination-btn {
+    height: 32px;
+    padding: var(--space-1) var(--space-2);
+  }
+  .pagination-page-btn {
+    width: 30px;
+    height: 30px;
   }
 }
 

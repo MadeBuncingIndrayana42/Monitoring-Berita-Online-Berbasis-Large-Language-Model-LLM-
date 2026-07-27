@@ -155,8 +155,17 @@ function renderShareChart(mediaList) {
   const ctx = document.getElementById('media-share-chart');
   if (!ctx) return;
 
+  // Palet warna yang cukup untuk banyak media
+  const PALETTE = [
+    '#1e3a8a', '#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444',
+    '#0ea5e9', '#f97316', '#14b8a6', '#e879f9', '#84cc16', '#f43f5e',
+    '#6366f1', '#22d3ee', '#fb923c', '#a3e635', '#c084fc', '#34d399',
+    '#fbbf24', '#60a5fa', '#f472b6', '#4ade80', '#facc15', '#38bdf8'
+  ];
+
   const labels = mediaList.map(m => m.name);
   const data = mediaList.map(m => m.total);
+  const colors = mediaList.map((_, i) => PALETTE[i % PALETTE.length]);
 
   if (shareChartInstance) {
     shareChartInstance.destroy();
@@ -168,9 +177,7 @@ function renderShareChart(mediaList) {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: [
-          '#1e3a8a', '#3b82f6', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444'
-        ],
+        backgroundColor: colors,
         borderWidth: 2,
         borderColor: '#ffffff'
       }]
@@ -180,14 +187,8 @@ function renderShareChart(mediaList) {
       maintainAspectRatio: false,
       cutout: '55%',
       plugins: {
-        legend: {
-          position: 'right',
-          labels: {
-            font: { family: 'Inter', size: 12 },
-            boxWidth: 12,
-            padding: 16
-          }
-        },
+        // Matikan legend bawaan — pakai custom HTML di bawah chart
+        legend: { display: false },
         tooltip: {
           backgroundColor: '#1e293b',
           titleFont: { family: 'Inter', size: 13, weight: '600' },
@@ -211,7 +212,29 @@ function renderShareChart(mediaList) {
       }
     }
   });
+
+  // Render custom legend HTML (nama penuh, tidak terpotong)
+  renderShareLegend(mediaList, colors);
 }
+
+function renderShareLegend(mediaList, colors) {
+  const legendEl = document.getElementById('media-share-legend');
+  if (!legendEl) return;
+
+  const total = mediaList.reduce((sum, m) => sum + m.total, 0);
+
+  legendEl.innerHTML = mediaList.map((m, i) => {
+    const pct = total > 0 ? Math.round((m.total / total) * 100) : 0;
+    return `
+      <div class="chart-legend-item">
+        <span class="chart-legend-dot" style="background:${colors[i]};"></span>
+        <span class="chart-legend-label" title="${m.name}">${m.name}</span>
+        <span class="chart-legend-pct">${pct}%</span>
+      </div>
+    `;
+  }).join('');
+}
+
 
 function renderSentimentChart(mediaList) {
   const ctx = document.getElementById('media-sentiment-chart');
